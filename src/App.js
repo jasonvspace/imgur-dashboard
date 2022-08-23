@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./App.scss";
-import { Container, Spinner, Card, Form } from "react-bootstrap";
+import { Container, Spinner } from "react-bootstrap";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
-import { debounce } from "lodash";
 
-import upVote from "./assets/up-vote.svg";
-import comment from "./assets/comment.svg";
-import eye from "./assets/eye.svg";
+import Search from "./components/Search";
+import Tile from "./components/Tile";
 
 import gallaryApi from "./services/gallary";
+
 function App() {
   const [gallary, setGallary] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -26,18 +25,10 @@ function App() {
       });
   }, [query]);
 
-  const handleSearch = debounce((event) => {
-    setQuery(event.target.value);
-  }, 500);
-
   return (
     <div className="App">
       <Container className="py-5">
-        <Form.Control
-          type="text"
-          placeholder="Search..."
-          onChange={handleSearch}
-        />
+        <Search setQuery={setQuery} />
       </Container>
       {isLoading ? (
         <Spinner animation="border" role="status">
@@ -60,36 +51,16 @@ function App() {
                 const type = item.images[0].type;
                 const cover = item.images[0].link;
                 return (
-                  <a
+                  <Tile
                     key={item.id}
                     href={item.link}
-                    className="text-decoration-none text-reset"
-                  >
-                    <Card className="m-2 shadow">
-                      {type === "video/mp4" ? (
-                        <video src={cover} />
-                      ) : (
-                        <Card.Img variant="top" src={cover} />
-                      )}
-                      <Card.Body>
-                        <Card.Text className="">{item.title}</Card.Text>
-                      </Card.Body>
-                      <Card.Footer className="d-flex align-item-center justify-content-between">
-                        <div className="d-flex align-items-center">
-                          <img src={upVote} alt="up-vote" />
-                          {item.ups}
-                        </div>
-                        <div className="d-flex align-items-center">
-                          <img src={comment} alt="comment" />
-                          {item.comment_count}
-                        </div>
-                        <div className="d-flex align-items-center">
-                          <img src={eye} alt="eye" />
-                          {item.views}
-                        </div>
-                      </Card.Footer>
-                    </Card>
-                  </a>
+                    type={type}
+                    cover={cover}
+                    title={item.title}
+                    upvoteCount={item.ups}
+                    commentCount={item.comment_count}
+                    viewCount={item.views}
+                  ></Tile>
                 );
               })}
             </Masonry>
