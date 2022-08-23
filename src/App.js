@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./App.scss";
 import { Container, Spinner, Card, Form } from "react-bootstrap";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
-import { debounce, isArray } from "lodash";
+import { debounce } from "lodash";
 
 import upVote from "./assets/up-vote.svg";
 import comment from "./assets/comment.svg";
